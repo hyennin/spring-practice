@@ -18,14 +18,18 @@ public class DemoApplication {
 				System.out.println(name);
 		}
 
-		MyBean bean = (MyBean) context.getBean("myBean");
-		System.out.println(bean);
-//		Person p = (Person) context.getBean(Person.class);
-		Person p = (Person) context.getBean("myPerson");
-		System.out.println(p);
+		MyBean bean1 = (MyBean) context.getBean("myBean");
+		MyBean bean2 = (MyBean) context.getBean("myBean");
+		System.out.println(bean1 == bean2);
 
-		MyCalculatorService calculatorService = (MyCalculatorService) context.getBean("myCalculatorService");
-		calculatorService.calcAdd(3, 5);
+		GreetingService greetingService = (GreetingService) context.getBean("greetingService");
+		greetingService.greet();
+////		Person p = (Person) context.getBean(Person.class);
+//		Person p = (Person) context.getBean("myPerson");
+//		System.out.println(p);
+//
+//		MyCalculatorService calculatorService = (MyCalculatorService) context.getBean("myCalculatorService");
+//		calculatorService.calcAdd(3, 5);
 	}
 
 }

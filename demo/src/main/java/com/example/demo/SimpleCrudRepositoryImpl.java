@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@Primary
+//@Primary
 public class SimpleCrudRepositoryImpl implements CrudRepository {
     @Override
     public Object[] getAll(Object o) {
