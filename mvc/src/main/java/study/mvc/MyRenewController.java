@@ -106,12 +106,8 @@ public class MyRenewController {
 
     // Q2) 저장된 모든 단어 보여주기 메서드, 스프링답게 핸들러 메서드 만들어보기
     @GetMapping(value = "/words", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> showWords() throws IOException {
+    public String showWords(){
         String allWords = String.join(", ", wordList);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/words");
-
-        return new ResponseEntity<>(allWords, headers, HttpStatus.OK);
+        return allWords;
     }
 }
