@@ -2,19 +2,49 @@ package study.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+
+class MyJsonData {
+    private String value1;
+    private Integer value2;
+
+    public String getValue1() { return value1; }
+    public Integer getValue2() { return value2; }
+    public void setValue1(String value1) { this.value1 = value1; }
+    public void setValue2(Integer value2) { this.value2 = value2; }
+}
+
+class MyStudentData {
+    private String id;
+    private String name;
+    private Integer age;
+
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public Integer getAge() { return age; }
+
+    public void setId(String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setAge(Integer age) { this.age = age; }
+}
+
+class MyKanyeData {
+    private String quote;
+
+    public String getQuote() { return quote; }
+    public void setQuote(String quote) { this.quote = quote; }
+}
 
 @RestController
 @RequestMapping("/renew")
@@ -109,5 +139,56 @@ public class MyRenewController {
     public String showWords(){
         String allWords = String.join(", ", wordList);
         return allWords;
+    }
+
+    @PostMapping("/test")
+    // @ModelAttribute를 타입 앞에 붙여주고 메서드의 파라미터 값으로 전달되게 함
+    public String commandObjectTest(@ModelAttribute MyCommandObject myCommandObject) {
+        return myCommandObject.toString();
+    }
+
+    // 요청 메시지의 Content-Type이 "applicaion/json"인 요청을 받아들이기 위해서 consumes를 MediaType.APPLICATION_JSON_VALUE로 설정
+    // 응답 메시지의 Content-Type이 "applicaion/json"이므로 produces를 MediaType.APPLICATION_JSON_VALUE로 설정
+    @PostMapping(value = "/json-test",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    // 반환 타입으로 MyJsonData를 설정하였고 ResponseBody 어노테이션을 통해 해당 값이 메시지 컨버터를 통해서 직렬화되어야 함을 알림
+    @ResponseBody
+    // RequestBody 어노테이션을 통해 요청 메시지의 바디에 포함된 JSON 문자열이 메시지 컨버터를 통해서 역직렬화되어 객체로 변환되어야 함을 알림
+    public MyJsonData jsonTest(@RequestBody MyJsonData myJsonData) {
+        System.out.println(myJsonData);
+        return myJsonData;
+    }
+
+    @PostMapping(value = "/student-test",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public MyStudentData studentTest(@RequestBody MyStudentData myStudentData) {
+        System.out.println(myStudentData);
+        return myStudentData;
+    }
+
+    @GetMapping(value = "/github/{user}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String githubUser(@PathVariable("user") String user) {
+        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+        RequestEntity<String> requestEntity = new RequestEntity<>(
+                null, null, HttpMethod.GET, URI.create("https://api.github.com/users/" + user)
+        );
+        ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
+
+        return response.getBody();
+    }
+
+    @GetMapping(value = "/kanye", produces = MediaType.APPLICATION_JSON_VALUE)
+    public MyKanyeData kanye() {
+        RestTemplate restTemplate = new RestTemplate();
+        RequestEntity<MyKanyeData> requestEntity = new RequestEntity<>(
+                null, null, HttpMethod.GET, URI.create("https://api.kanye.rest/")
+        );
+        ResponseEntity<MyKanyeData> response = restTemplate.exchange(requestEntity, MyKanyeData.class);
+
+        return response.getBody();
     }
 }
