@@ -3,7 +3,18 @@ package study.mvc;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.SimpleFormatter;
+
+class SuccessResult {
+    public String result = "success";
+}
+
+class Result {
+    public String result;
+    public Integer code;
+}
 
 @RestController
 @RequestMapping("/test")
@@ -58,5 +69,40 @@ public class TestController {
     @PostMapping(value = "/count", produces = MediaType.TEXT_PLAIN_VALUE)
     public String countRequest() {
         return "" + (++cnt);
+    }
+
+    @GetMapping(value = "/result1", produces = MediaType.APPLICATION_JSON_VALUE)
+    public SuccessResult resultTest1() {
+        return new SuccessResult();
+    }
+
+    @GetMapping(value = "/result2", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result resultTest2() {
+        Result result = new Result();
+        result.result = "success";
+        result.code = 1000;
+
+        return result;
+    }
+
+    @GetMapping(value = "/result3", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> resultTest3() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", "success");
+        result.put("code", 1000);
+
+        return result;
+    }
+
+    @GetMapping(value = "/now", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> nowTest() {
+        Map<String, Object> result = new HashMap<>();
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
+        result.put("date", dateFormat.format(date));
+        result.put("time", timeFormat.format(date));
+
+        return result;
     }
 }
