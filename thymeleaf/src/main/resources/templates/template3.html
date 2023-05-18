@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- 스타일 정보 -->
+  <style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    .sale {
+        color: red;
+    }
+    .odd {
+        background: lightgray;
+    }
+    .first, .last {
+        background: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <!-- th:if, th:unless -->
+  <!-- 참, 거짓 여부에 따라서 해당 요소를 보여줄지 말지(display: none;을 한다는 것이 아니고 아예 문서에 포함 자체를 안함) 결정 -->
+  <div th:if="${condition1} == true" style="width:200px; height:200px; background: red;">true</div>
+  <div th:if="${condition2}" style="width:200px; height:200px; background: red;">false</div>
+
+  <div th:object="${book}">
+    <h1 th:text="*{name}"></h1>
+    <!-- if -->
+    <div th:if="*{sale}">
+      <p>현재 할인 판매중인 상품입니다. 할인률은 <span th:text="*{saleAmount * 100}"></span>%이고 가격은 <span th:text="*{price - (price * saleAmount)}"></span>입니다.</p>
+    </div>
+    <!-- else -->
+    <!-- true와의 비교는 불필요 -->
+    <div th:unless="*{sale}">
+      <p>현재 정가 판매중인 상품입니다. 가격은 <span th:text="*{price}"></span>입니다.</p>
+    </div>
+  </div>
+
+  <!-- switch – case 구문 -->
+  <!-- th:switch, th:case -->
+  <div th:switch="${grade}">
+    <p th:case="'A'">A grade</p>
+    <p th:case="'B'">B grade</p>
+    <p th:case="'C'">C grade</p>
+    <!-- *로 default case 잡아내기 -->
+    <p th:case="*">low grade</p>
+  </div>
+
+  <!-- 리스트, 콜렉션 형태의 객체 접근 -->
+  <!-- index 이용한 개별 접근 가능 -->
+  <!-- 리스트 접근 -->
+  <p th:text="${book_list[0].name}"></p>
+
+  <!-- 맵 접근 -->
+  <p th:text="${book_map.get('book1').name}"></p>
+  <p th:text="${book_map['book1'].name}"></p>
+
+  <table>
+    <tr>
+      <th>순서</th>
+      <th>이름</th>
+      <th>저자</th>
+      <th>정가</th>
+      <th>할인가</th>
+    </tr>
+    <p>총 <span th:text="${book_list.size()}"></span>권의 책이 있습니다.</p>
+    <!-- 만약 index, odd, first, last와 같은 정보가 필요하면 stat이라는 변수 함께 제공받을 수 있음 -->
+    <!-- odd, even의 주 활용처 (테이블에서 인접한 열끼리 다른 배경색상 가지게 하기) -->
+    <!-- classappend는 이미 class 속성을 가지고 있는 경우 더 덧붙이기 위해서 사용 (multiple class 제공 위해서) -->
+    <tr th:each="book, stat : ${book_list}" th:class="${stat.odd} ? 'odd' : 'even'" th:classappend="(${stat.first} ? 'first' : '') + (${stat.last} ? 'last' : '')">
+      <td th:text="${stat.index + 1}"></td>
+      <td th:text="${book.name}"></td>
+      <td th:text="${book.author.name}"></td>
+      <td th:text="${book.price}"></td>
+      <!-- isSale() 메소드 호출로 세일 여부 판단도 가능 -->
+      <td th:if="${book.isSale()}" class="sale" th:text="${book.price - (book.price * book.saleAmount)}"></td>
+      <td th:unless="${book.isSale()}">N/A</td>
+    </tr>
+  </table>
+</body>
+</html>
