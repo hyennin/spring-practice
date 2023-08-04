@@ -18,3 +18,9 @@ INSERT INTO comment (writer, content, article_id) VALUES("writer 2", "Hello 1 co
 INSERT INTO comment (writer, content, article_id) VALUES("writer 2", "Hello 2 comment 1", 2);
 INSERT INTO comment (writer, content, article_id) VALUES("writer 1", "Hello 2 comment 2", 2);
 
+INSERT INTO person (id, first_name, last_name, age, birth_day, email) VALUES(1, "철수", "김", 42, "1977-01-05", "kim@hello.com");
+INSERT INTO person (id, first_name, last_name, age, birth_day, email) VALUES(2, "영희", "박", 52, "1967-10-25", "younghee@mirim.net");
+INSERT INTO person (id, first_name, last_name, age, birth_day, email) VALUES(3, "나영", "최", 40, "1978-07-10", "name@hello.com");
+INSERT INTO person (id, first_name, last_name, age, birth_day, email) VALUES(4, "연두", "박", 38, "1980-04-11", "green@daum.net");
+INSERT INTO person (id, first_name, last_name, age, birth_day, email) VALUES(5, "소연", "김", 28, "1990-06-15", "soy@mirim.net");
+INSERT INTO person (id, first_name, last_name, age, birth_day, email) VALUES(6, "철수", "김", 32, "1987-02-06", "chulsoo@daum.net");
